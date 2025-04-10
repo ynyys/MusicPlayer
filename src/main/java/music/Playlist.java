@@ -69,7 +69,7 @@ public class Playlist {
                         String songName = scanner.nextLine();
                         boolean songFound = false;
 
-                        for (Song song : Application.getSongs()) {
+                        for (Song song : songs) {
                             if (songName.equalsIgnoreCase(song.getTitle())) {
                                 System.out.println("Do you want to remove: " + song.displayInfo() + " from " + playlistName + "?\n(Y/N)");
                                 String confirm = scanner.nextLine();
@@ -123,7 +123,7 @@ public class Playlist {
             }
         }
 
-        Boolean duplicate = false;
+        boolean duplicate = false;
         for (Song song : songs) {
             if (songToAdd.equals(song)) {
                 System.out.println("This song is already in this playlist.");

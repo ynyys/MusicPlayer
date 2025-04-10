@@ -2,6 +2,7 @@ package music;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -56,6 +57,7 @@ public class Application {
             System.out.println("E - Explore a Playlist");
             System.out.println("S - Search for Song in Playlist");
             System.out.println("A - Add new Playlist");
+            System.out.println("R - Remove a Playlist");
             System.out.println("X - Back to menu");
 
             response = scanner.nextLine();
@@ -102,6 +104,61 @@ public class Application {
                     if (!songFound) {
                         System.out.println("Could not find song '" + songToFind + "'. Check naming.");
                     }
+                case ("A"):
+                    System.out.println("What are you naming this playlist?");
+                    String playlistName = scanner.nextLine();
+
+                    boolean duplicate = false;
+
+                    for (Playlist playlist : playlists) {
+                        if (playlist.getPlaylistName().equals(playlistName)) {
+                            duplicate = true;
+                            System.out.println("A playlist with name '" + playlistName + "' already exists.");
+                        }
+                    }
+                    if (!duplicate) {
+                        System.out.println("This playlist will be called '" + playlistName + "'. Are you happy with this?\n(Y/N)");
+                        String confirmation = scanner.nextLine();
+                        confirmation = confirmation.toUpperCase();
+
+                        switch (confirmation) {
+                            case ("Y"):
+                                try {
+                                    String debug = "";
+                                    Scanner readPlaylistsFile = new Scanner(new File("playlists"));
+
+                                    ArrayList<String> existingPlaylists = new ArrayList<>();
+
+                                    while (readPlaylistsFile.hasNextLine()) {
+                                        existingPlaylists.add(readPlaylistsFile.nextLine());
+                                    }
+                                    readPlaylistsFile.close();
+
+                                    PrintWriter writer = new PrintWriter("playlists");
+
+                                    String existingPrint = "";
+                                    for (String playlist : existingPlaylists) {
+                                        existingPrint += playlist + "\n";
+                                    }
+                                    writer.print(existingPrint);
+                                    writer.print(playlistName);
+                                    writer.close();
+
+                                    Playlist playlist = new Playlist(playlistName);
+                                    playlists.add(playlist);
+                                }
+                                catch (FileNotFoundException e) {
+                                    System.out.println("Something went wrong, couldn't load playlists.txt. Check directory.");
+                                }
+                                break;
+                            default:
+                                System.out.println("New playlist '" + playlistName + "' will not be created.");
+                                break;
+                        }
+                    }
+                    break;
+                case ("R"):
+                    break;
                 case ("X"):
                     System.out.println("Exiting playlists menu...");
                     break;
