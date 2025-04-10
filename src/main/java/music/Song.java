@@ -9,8 +9,8 @@ public class Song {
     private final File songFile;
 
     public Song(String title, String artist, String filename) throws FileNotFoundException {
-        this.title = title;
-        this.artist = artist;
+        this.title = title.replaceAll("_", " ");
+        this.artist = artist.replaceAll("_", " ");
         songFile = new File(filename);
     }
 
@@ -27,8 +27,8 @@ public class Song {
     }
 
     public String displayInfo() {
-        String correctTitle = title.replaceAll("_", " ");
-        String correctArtist = artist.replaceAll("_", " ");
+        String correctTitle = title;
+        String correctArtist = artist;
         return correctTitle + ", by " + correctArtist;
     }
 }

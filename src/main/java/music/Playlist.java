@@ -57,13 +57,39 @@ public class Playlist {
                             }
                         }
                         if (!songFound) {
-                            System.out.println("Cannot find song to add, try again.");
+                            System.out.println("Cannot find song '" + songName + "' to add, try again.");
                         }
                     } catch (Exception e) {
                         System.out.println("Cannot find song to add, try again.");
                     }
                     break;
                 case ("R"):
+                    try {
+                        System.out.println("Enter song name to remove:");
+                        String songName = scanner.nextLine();
+                        boolean songFound = false;
+
+                        for (Song song : Application.getSongs()) {
+                            if (songName.equalsIgnoreCase(song.getTitle())) {
+                                System.out.println("Do you want to remove: " + song.displayInfo() + " from " + playlistName + "?\n(Y/N)");
+                                String confirm = scanner.nextLine();
+                                confirm = confirm.toUpperCase();
+                                songFound = true;
+                                if (confirm.equals("Y")) {
+                                    removeSong(songName);
+                                    break;
+                                }
+                                else {
+                                    System.out.println(song.displayInfo() + ", will not be removed from " + playlistName + ".");
+                                }
+                            }
+                        }
+                        if (!songFound) {
+                            System.out.println("Cannot find song '" + songName + "' to remove, try again.");
+                        }
+                    } catch (Exception e) {
+                        System.out.println("Cannot find song to remove, try again.");
+                    }
                     break;
                 case ("P"):
                     System.out.println("Now playing all songs in " + playlistName);
@@ -113,9 +139,17 @@ public class Playlist {
         }
     }
 
-    public void removeSong(Song song) {
-        songs.remove(song);
-        numOfSongs--;
+    public void removeSong(String songName) {
+        Song songToRemove;
+        for (Song song : Application.getSongs()) {
+            if (songName.equalsIgnoreCase(song.getTitle())) {
+                songToRemove = song;
+                System.out.println("Removed " + songToRemove.displayInfo() + " from " + playlistName);
+                songs.remove(songToRemove);
+                numOfSongs--;
+                break;
+            }
+        }
     }
 
     public Song getSong(String songName) {

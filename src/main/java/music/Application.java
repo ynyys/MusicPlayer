@@ -66,7 +66,6 @@ public class Application {
                 case ("E"):
                     try {
                         System.out.println("What playlist do you want to explore?");
-                        System.out.println("FYI: If playlist has spaces in name, use '_'. Otherwise, will not find.");
                         String playlistName = scanner.nextLine();
 
                         for (Playlist playlist : playlists) {
@@ -82,6 +81,27 @@ public class Application {
                         System.out.println("Please enter a valid playlist name.");
                     }
                     break;
+                case ("S"):
+                    System.out.println("What song are you looking for?");
+                    String songToFind = scanner.nextLine();
+
+                    boolean songFound = false;
+
+                    for (Playlist playlist : playlists) {
+                        for (Song song : songs) {
+                            if (songToFind.equalsIgnoreCase(song.getTitle())) {
+                                System.out.println("Found " + song.getTitle() + " in " + playlist.getPlaylistName());
+                                songFound = true;
+                                break;
+                            }
+                        }
+                        if (songFound) {
+                            break;
+                        }
+                    }
+                    if (!songFound) {
+                        System.out.println("Could not find song '" + songToFind + "'. Check naming.");
+                    }
                 case ("X"):
                     System.out.println("Exiting playlists menu...");
                     break;
@@ -97,10 +117,8 @@ public class Application {
 
         System.out.println(">> Search for song");
         System.out.println("What song are you looking for?");
-        System.out.println("FYI: If song has spaces in name, use '_'. Otherwise, will not find.");
 
         String response = scanner.nextLine();
-        response = response.toUpperCase();
 
         boolean found = false;
 
@@ -119,6 +137,7 @@ public class Application {
 
                     switch (songAction) {
                         case ("P"):
+                            System.out.println("Now playing " + song.displayInfo());
                             Player.play(song);
                             break;
                         case ("A"):
@@ -142,7 +161,7 @@ public class Application {
                                 }
                             }
                             if (!playlistFound) {
-                                System.out.println("Could not find playlist: '" + playlistName + "'");
+                                System.out.println("Could not find playlist '" + playlistName + "'");
                             }
                             break;
                         case ("X"):
@@ -215,6 +234,7 @@ public class Application {
                 String[] songsToAdd = currentLine.split(",");
 
                 for (String song : songsToAdd) {
+                    song = song.replaceAll("_", " ");
                     temp.add(song);
                 }
 
