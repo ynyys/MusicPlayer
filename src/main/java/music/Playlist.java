@@ -2,7 +2,9 @@ package music;
 
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
+import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -43,21 +45,33 @@ public class Playlist {
 
                         for (Song song : Application.getSongs()) {
                             if (songName.equalsIgnoreCase(song.getTitle())) {
+                                songFound = true;
                                 System.out.println("Do you want to add: " + song.displayInfo() + " to " + playlistName + "?\n(Y/N)");
                                 String confirm = scanner.nextLine();
                                 confirm = confirm.toUpperCase();
-                                songFound = true;
+
                                 if (confirm.equals("Y")) {
                                     addSong(songName);
-                                    break;
+
+                                    PrintWriter fileWriter = new PrintWriter("playlists");
+                                    for (Playlist playlist : Application.getPlaylists()) {
+
+                                        String line = playlist.getPlaylistName() + " ";
+                                        for (int i = 0; i < playlist.songs.size(); i++) {
+                                            line += playlist.songs.get(i).getTitle().replaceAll(" ", "_") + ",";
+                                        }
+                                        fileWriter.println(line);
+                                    }
+                                    fileWriter.print("End.");
+                                    fileWriter.close();
                                 }
                                 else {
                                     System.out.println(song.displayInfo() + ", will not be added to " + playlistName + ".");
                                 }
                             }
-                        }
-                        if (!songFound) {
-                            System.out.println("Cannot find song '" + songName + "' to add, try again.");
+                            if (songFound) {
+                                break;
+                            }
                         }
                     } catch (Exception e) {
                         System.out.println("Cannot find song to add, try again.");
@@ -71,12 +85,25 @@ public class Playlist {
 
                         for (Song song : songs) {
                             if (songName.equalsIgnoreCase(song.getTitle())) {
+                                songFound = true;
                                 System.out.println("Do you want to remove: " + song.displayInfo() + " from " + playlistName + "?\n(Y/N)");
                                 String confirm = scanner.nextLine();
                                 confirm = confirm.toUpperCase();
-                                songFound = true;
+
                                 if (confirm.equals("Y")) {
                                     removeSong(songName);
+
+                                    PrintWriter fileWriter = new PrintWriter("playlists");
+                                    for (Playlist playlist : Application.getPlaylists()) {
+
+                                        String line = playlist.getPlaylistName() + " ";
+                                        for (int i = 0; i < playlist.songs.size(); i++) {
+                                            line += playlist.songs.get(i).getTitle().replaceAll(" ", "_") + ",";
+                                        }
+                                        fileWriter.println(line);
+                                    }
+                                    fileWriter.print("End.");
+                                    fileWriter.close();
                                     break;
                                 }
                                 else {
@@ -84,8 +111,8 @@ public class Playlist {
                                 }
                             }
                         }
-                        if (!songFound) {
-                            System.out.println("Cannot find song '" + songName + "' to remove, try again.");
+                        if (songFound) {
+                            break;
                         }
                     } catch (Exception e) {
                         System.out.println("Cannot find song to remove, try again.");

@@ -104,6 +104,7 @@ public class Application {
                     if (!songFound) {
                         System.out.println("Could not find song '" + songToFind + "'. Check naming.");
                     }
+                    break;
                 case ("A"):
                     System.out.println("What are you naming this playlist?");
                     String playlistName = scanner.nextLine();
@@ -130,7 +131,10 @@ public class Application {
                                     ArrayList<String> existingPlaylists = new ArrayList<>();
 
                                     while (readPlaylistsFile.hasNextLine()) {
-                                        existingPlaylists.add(readPlaylistsFile.nextLine());
+                                        String line = readPlaylistsFile.nextLine();
+                                        if (!line.equals("End.")) {
+                                            existingPlaylists.add(line);
+                                        }
                                     }
                                     readPlaylistsFile.close();
 
@@ -141,7 +145,8 @@ public class Application {
                                         existingPrint += playlist + "\n";
                                     }
                                     writer.print(existingPrint);
-                                    writer.print(playlistName);
+                                    writer.println(playlistName);
+                                    writer.print("End.");
                                     writer.close();
 
                                     Playlist playlist = new Playlist(playlistName);
@@ -264,11 +269,13 @@ public class Application {
             while (scanner.hasNextLine()) {
                 String playlistName = scanner.next();
 
-                Playlist playlist = new Playlist(playlistName);
-                String songs = scanner.next();
-                ArrayList<Song> songList = populatePlaylist(songs);
-                playlist.setSongs(songList);
-                playlists.add(playlist);
+                if (!playlistName.equals("End.")) {
+                    Playlist playlist = new Playlist(playlistName);
+                    String songs = scanner.next();
+                    ArrayList<Song> songList = populatePlaylist(songs);
+                    playlist.setSongs(songList);
+                    playlists.add(playlist);
+                }
             }
             scanner.close();
         }
@@ -321,5 +328,9 @@ public class Application {
 
     public static ArrayList<Song> getSongs() {
         return songs;
+    }
+
+    public static ArrayList<Playlist> getPlaylists() {
+        return playlists;
     }
 }
