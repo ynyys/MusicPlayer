@@ -205,7 +205,6 @@ public class Application {
                         case ("A"):
                             System.out.println("What playlist do you want to add song to?");
                             String playlistName = scanner.nextLine();
-                            playlistName = playlistName.toUpperCase();
 
                             boolean playlistFound = false;
                             for (Playlist playlist : playlists) {
